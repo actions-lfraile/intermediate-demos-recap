@@ -1,0 +1,28 @@
+name: 5. Extended commands
+
+on:
+  push:
+    paths: 
+      - .github/workflows/5-extended-commands.yml
+  workflow_dispatch:
+
+jobs:
+  extended-commands:
+    runs-on: ubuntu-latest    
+    steps:
+      - name: Error command
+        run: |
+          echo "::error:: This is an error message"
+
+      - name: Stop workflow commands
+        run: |        
+          echo "::warning:: This is a warning message, to demonstrate that commands are being processed."
+          stopMarker=$(uuidgen)
+          echo "::stop-commands::$stopMarker"
+          echo "::warning:: This will NOT be rendered as a warning, because stop-commands has been invoked."
+          echo "::$stopMarker::"
+          echo "::warning:: This is a warning again, because stop-commands has been turned off."
+
+      - name: Job summary
+        run: |-
+          echo "### This is the job summary :rocket:" >> $GITHUB_STEP_SUMMARY

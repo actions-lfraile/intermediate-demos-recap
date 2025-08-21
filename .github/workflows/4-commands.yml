@@ -1,0 +1,47 @@
+name: 4. Commands
+
+on:
+  push:
+    paths: 
+      - .github/workflows/4-commands.yml
+  workflow_dispatch:
+
+jobs:
+  secret-generator:
+    runs-on: ubuntu-latest
+    outputs:
+      handle: ${{ steps.store-secret.outputs.secret-handle }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: generate secret
+        id: generate-secret
+        shell: bash
+        run: |
+          GENERATED_SECRET=$((RANDOM))
+          echo "::add-mask::$GENERATED_SECRET"                              
+          echo "generated-secret=$GENERATED_SECRET" >> "$GITHUB_OUTPUT"
+
+      - name: Store the secret
+        uses: ./secret-store
+        id: store-secret
+        with:
+          secret: ${{ steps.generate-secret.outputs.generated-secret }}
+  secret-consumer:
+    runs-on: ubuntu-latest
+    needs: secret-generator
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: retrieve secret
+        uses: ./secret-retrieve
+        id: retrieve-secret
+        with:
+          secret-handle: ${{ needs.secret-generator.outputs.handle }}
+          
+      - name: use secret
+        shell: bash
+        run: |
+          SECRET="${{ steps.retrieve-secret.outputs.retrieved-secret }}"
+          echo "::add-mask::$SECRET"
+          echo "We retrieved our masked secret: $SECRET"

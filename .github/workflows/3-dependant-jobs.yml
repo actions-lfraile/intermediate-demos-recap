@@ -1,0 +1,48 @@
+name: 3. Dependant jobs (Concurrency)
+
+on:
+  push:
+    paths: 
+      - .github/workflows/3-dependant-jobs.yml
+  workflow_dispatch:
+
+jobs:
+  first-job:
+    runs-on: ubuntu-latest
+    name: First job
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      
+      - name: Just build
+        run: |
+          echo "Building the main project..."
+          sleep 5
+
+  second-job:
+    runs-on: ubuntu-latest
+    name: Second job
+    
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      
+      - name: Just build
+        run: |
+          echo "Building the secondary project..."
+          sleep 5
+
+  dependant-job:
+    runs-on: ubuntu-latest
+    name: Dependant on others
+    needs: first-job
+    
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      
+      - name: Just build
+        run: |
+          echo "Building the dependant project..."
+          sleep 5

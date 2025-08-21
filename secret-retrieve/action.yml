@@ -1,0 +1,19 @@
+name: 'Retrieve Secret'
+description: 'Simulates retrieving a secret from a store using a handle'
+inputs:
+  secret-handle:
+    description: 'The handle to retrieve the secret'
+    required: true
+outputs:
+  retrieved-secret:
+    description: 'The retrieved secret'
+    value: ${{ steps.retrieve.outputs.retrieved-secret }}
+runs:
+  using: 'composite'
+  steps:
+    - id: retrieve
+      shell: bash
+      run: |
+        echo "::debug::Retrieve secret for handle: ${{ inputs.secret-handle }}"
+        RETRIEVED_SECRET="retrieved-for-${{ inputs.secret-handle }}"
+        echo "retrieved-secret=$RETRIEVED_SECRET" >> "$GITHUB_OUTPUT"

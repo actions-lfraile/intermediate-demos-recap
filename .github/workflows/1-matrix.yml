@@ -1,0 +1,39 @@
+name: 1. Matrix
+
+on:
+  push:
+    paths: 
+      - .github/workflows/1-matrix.yml
+  workflow_dispatch:
+
+jobs:
+  demo-matrix:
+    runs-on: ${{ matrix.os }}
+    name: Demo matrixes
+    
+    strategy:    
+      fail-fast: true      
+      max-parallel: 3
+      matrix:
+        # our matrix for testing acros node versions and OSs. With one exclusion
+        node-version: [22, 24]
+        os: [windows-2022, ubuntu-22.04, ubuntu-latest]
+        exclude:
+          - os: windows-2022
+            node-version: 22
+        
+    steps:
+      - name: Setup node ${{ matrix.node-version }} on ${{ matrix.os }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+  
+      - name: Check runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJson(runner) }}
+        run: |
+          echo $RUNNER_CONTEXT      
+
+      - name: Check node
+        run: |
+          node --version

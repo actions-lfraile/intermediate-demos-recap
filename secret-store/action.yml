@@ -1,0 +1,19 @@
+name: 'Generate Secret Handle'
+description: 'Generates a secret handle from a provided secret'
+inputs:
+  secret:
+    description: 'The secret to generate a handle for'
+    required: true
+outputs:
+  secret-handle:
+    description: 'The generated secret handle'
+    value: ${{ steps.generate-handle.outputs.secret-handle }}
+runs:
+  using: 'composite'
+  steps:
+    - id: generate-handle
+      shell: bash
+      run: |        
+        SECRET_HANDLE="handle-$(echo -n "${{ inputs.secret }}" | sha256sum | cut -c1-8)"
+        echo "secret-handle=$SECRET_HANDLE" >> "$GITHUB_OUTPUT"
+        echo "::debug::Generated secret handle: $SECRET_HANDLE"

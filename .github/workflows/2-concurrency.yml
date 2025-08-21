@@ -1,0 +1,36 @@
+name: 2. Concurrency groups
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  demo-concurrency:
+    runs-on: ubuntu-latest
+    name: Demo Concurrency
+    
+    concurrency:
+      group: job-${{ github.ref }}
+      cancel-in-progress: true
+    
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      
+      - name: Just build
+        run: |
+          echo "Building the project..."
+          sleep 5
+
+  no-concurrency:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || startsWith(github.ref, 'refs/heads/main')
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Just build
+        if: github.event_name == 'push'
+        run: |
+          echo "Building the project (no concurrency)..."          
+          sleep 5
