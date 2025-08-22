@@ -41,6 +41,7 @@ jobs:
                 issues(first:100, labels: [$label]) {
                   nodes {
                     id
+                    title
                   }
                 }
               }
