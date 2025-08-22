@@ -51,4 +51,4 @@ jobs:
               label: 'help wanted'
             }
             const result = await github.graphql(query, variables)
-            console.log(result)
+            console.log(JSON.stringify(result))
