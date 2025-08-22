@@ -10,6 +10,14 @@ jobs:
   extended-commands:
     runs-on: ubuntu-latest    
     steps:
+      - name: Grouped message
+        run: |-
+          echo "::group::What is this?"
+          echo "This is a demo for some commands we have on GitHub Actions."
+          echo "Also this shows how we can group messages in a script step."
+          echo "This is helpful for organizing output in a script step with a lot of lines."
+          echo "::endgroup::"
+
       - name: Error command
         run: |
           echo "::error:: This is an error message"
