@@ -21,6 +21,13 @@ jobs:
               body: '👋 Thanks for reporting! Here\'s tick number for you: ' + randomNumber
             });
 
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['help wanted']
+            });
+
             return randomNumber;
 
       - name: Show ticket number
@@ -29,7 +36,7 @@ jobs:
       - uses: actions/github-script@v7
         with:
           script: |
-            const query = `query($owner:String!, $name:String!) {
+            const query = `query($owner:String!, $name:String!, $label:String!) {
               repository(owner:$owner, name:$name){
                 issues(first:100, labels: [$label]) {
                   nodes {
@@ -38,10 +45,10 @@ jobs:
                 }
               }
             }`;
-            
             const variables = {
               owner: context.repo.owner,
-              name: context.repo.repo
+              name: context.repo.repo,
+              label: 'help wanted'
             }
             const result = await github.graphql(query, variables)
             console.log(result)
