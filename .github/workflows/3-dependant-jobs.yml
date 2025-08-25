@@ -23,6 +23,7 @@ jobs:
 
   second-job:
     runs-on: ubuntu-latest
+    if: always()
     name: Second job
     
     steps:
