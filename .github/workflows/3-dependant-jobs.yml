@@ -19,6 +19,7 @@ jobs:
         run: |
           echo "Building the main project..."
           sleep 5
+          fail
 
   second-job:
     runs-on: ubuntu-latest
