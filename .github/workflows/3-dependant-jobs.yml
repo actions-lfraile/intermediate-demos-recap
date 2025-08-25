@@ -23,7 +23,6 @@ jobs:
 
   second-job:
     runs-on: ubuntu-latest
-    if: always()
     name: Second job
     
     steps:
@@ -36,7 +35,8 @@ jobs:
           sleep 5
 
   dependant-job:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest    
+    if: always()
     name: Dependant on others
     needs: first-job
     
